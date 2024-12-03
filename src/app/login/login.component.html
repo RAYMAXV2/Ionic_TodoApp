@@ -1,0 +1,23 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Login</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="login-container">
+    <ion-input
+      placeholder="Email"
+      type="email"
+      [(ngModel)]="email"
+      clearInput
+    ></ion-input>
+    <ion-input
+      placeholder="Password"
+      type="password"
+      [(ngModel)]="password"
+      clearInput
+    ></ion-input>
+    <ion-button expand="block" (click)="login()">Login</ion-button>
+  </div>
+</ion-content>

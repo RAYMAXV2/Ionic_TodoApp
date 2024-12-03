@@ -41,15 +41,15 @@ export class MenulistComponent implements OnInit {
   }
 
   filteredTodos() {
-    if (this.selectedCategory) {
-      const category = this.categories.find(cat => cat.id === this.selectedCategory);
-      return category?.listTasks || [];
-    }
-  
-    return this.categories
-      .map(cat => cat.listTasks)
-      .reduce((acc, tasks) => acc.concat(tasks), []);
+  if (this.selectedCategory) {
+    const category = this.categories.find(cat => cat.id === this.selectedCategory);
+    return category?.listTasks || [];
   }
+
+  return this.categories
+    .map(cat => cat.listTasks)
+    .reduce((acc, tasks) => acc.concat(tasks), []);
+}
 
   addTodo() {
     if (this.newTodoName.trim() && this.selectedCategory) {

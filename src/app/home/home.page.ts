@@ -7,11 +7,9 @@ import { Router } from '@angular/router';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage {
-
   constructor(private router: Router) {}
 
-  navigateToMenu() {
-    this.router.navigate(['/menu']); 
+  navigateToLogin() {
+    this.router.navigate(['/login']);
   }
-
 }
