@@ -3,6 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { Todo } from '../modele/todo';
+import { Category } from '../modele/category';
+import { NavigationEnd, Router } from '@angular/router';
 
 @Component({
   selector: 'app-menulist',
@@ -10,61 +12,84 @@ import { Todo } from '../modele/todo';
   styleUrls: ['./menulist.component.scss'],
   imports: [IonicModule, FormsModule, CommonModule],
   standalone: true,
-
 })
-export class MenulistComponent  implements OnInit {
+export class MenulistComponent implements OnInit {
+  categories: Category[] = [];
+  selectedCategory: number | null = null;
+  newTodoName: string = '';
 
-  constructor() { }
-
-  
+  constructor(private router: Router) {
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this.loadCategories();
+      }
+    });
+  }
 
   ngOnInit() {
-    this.loadTodos(); 
+    this.loadCategories();
   }
-  todos: Todo[] = []; 
-  newTodoName: string = ''; 
-  nextId: number = 1; 
-
-
-  // dans le localstorage, temporairement on met les données 
-  loadTodos() {
-    const storedTodos = localStorage.getItem('todos');
-    if (storedTodos) {
-      this.todos = JSON.parse(storedTodos); 
+  loadCategories() {
+    const storedCategories = localStorage.getItem('categories');
+    if (storedCategories) {
+      this.categories = JSON.parse(storedCategories);
     }
   }
 
-  // Sauvegarder les to-dos dans Local Storage
-  saveTodos() {
-    localStorage.setItem('todos', JSON.stringify(this.todos));
+  saveCategories() {
+    localStorage.setItem('categories', JSON.stringify(this.categories));
   }
- 
 
-  // Ajouter une tâche
+  filteredTodos() {
+    if (this.selectedCategory) {
+      const category = this.categories.find(cat => cat.id === this.selectedCategory);
+      return category?.listTasks || [];
+    }
+  
+    return this.categories
+      .map(cat => cat.listTasks)
+      .reduce((acc, tasks) => acc.concat(tasks), []);
+  }
+
   addTodo() {
-    if (this.newTodoName.trim()) {
-      const newTodo: Todo = {
-        id: this.nextId++,
-        name: this.newTodoName.trim(),
-        completed: false,
-        createdAt: new Date(), 
-      };
-
-      this.todos.push(newTodo);
-      this.newTodoName = ''; 
-      this.saveTodos(); 
-
+    if (this.newTodoName.trim() && this.selectedCategory) {
+      const category = this.categories.find(
+        (cat) => cat.id === this.selectedCategory
+      );
+      if (category) {
+        const newTodo: Todo = {
+          id: Date.now(),
+          name: this.newTodoName.trim(),
+          completed: false,
+          createdAt: new Date(),
+        };
+        category.listTasks.push(newTodo);
+        this.newTodoName = ''; 
+        this.saveCategories(); 
+      }
     }
   }
 
-  // Supprimer une tâche
-  deleteTodo(id: number) {
-    this.todos = this.todos.filter((todo) => todo.id !== id);
-    this.saveTodos(); 
+  deleteTodo(todoId: number) {
+    const category = this.categories.find(
+      (cat) => cat.id === this.selectedCategory
+    );
+    if (category) {
+      category.listTasks = category.listTasks.filter((task) => task.id !== todoId);
+      this.saveCategories(); 
+    }
   }
 
   toggleCompleted(todo: Todo) {
     todo.completed = !todo.completed;
-    this.saveTodos(); 
+    this.saveCategories(); 
+  }
+
+  navigateToCreateTask() {
+    this.router.navigate(['/create-task']);
+  }
+
+  navigateToCreateCategory() {
+    this.router.navigate(['/categories']);
   }
 }

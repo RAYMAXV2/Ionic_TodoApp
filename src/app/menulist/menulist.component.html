@@ -8,9 +8,14 @@
   <div class="todo-container">
     <h2>Mes Tâches</h2>
 
-    <!-- Liste des tâches -->
-    <ion-list>
-      <ion-item-sliding *ngFor="let todo of todos">
+    <ion-select placeholder="Filtrer par catégorie" [(ngModel)]="selectedCategory">
+      <ion-select-option *ngFor="let category of categories" [value]="category.id">
+        {{ category.name }}
+      </ion-select-option>
+    </ion-select>
+
+    <ion-list *ngIf="filteredTodos().length > 0; else noTodos">
+      <ion-item-sliding *ngFor="let todo of filteredTodos()">
         <ion-item>
           <ion-label>
             <h3>{{ todo.name }}</h3>
@@ -30,14 +35,14 @@
       </ion-item-sliding>
     </ion-list>
 
-    <!-- Ajouter une tâche -->
-    <ion-input
-      placeholder="Nom de la tâche"
-      [(ngModel)]="newTodoName"
-      clearInput
-    ></ion-input>
-    <ion-button expand="block" color="primary" (click)="addTodo()">
-      Ajouter
-    </ion-button>
+    <ng-template #noTodos>
+      <p>Aucune tâche disponible pour cette catégorie.</p>
+    </ng-template>
+
+
+    <div class="button-container">
+      <ion-button expand="block" (click)="navigateToCreateCategory()">Catégories</ion-button>
+      <ion-button expand="block" (click)="navigateToCreateTask()">Créer une Tâche</ion-button>
+    </div>
   </div>
 </ion-content>

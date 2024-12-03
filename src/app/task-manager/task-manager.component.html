@@ -1,0 +1,35 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Créer une Tâche</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="task-container">
+    <h2>Nouvelle Tâche</h2>
+
+    <ion-input
+      placeholder="Nom de la tâche"
+      [(ngModel)]="taskName"
+      clearInput
+    ></ion-input>
+
+    <ion-select
+      placeholder="Sélectionner une catégorie"
+      [(ngModel)]="selectedCategoryId"
+    >
+      <ion-select-option *ngFor="let category of categories" [value]="category.id">
+        {{ category.name }}
+      </ion-select-option>
+    </ion-select>
+
+    <ion-button
+      expand="block"
+      color="primary"
+      (click)="createTask()"
+      [disabled]="!isFormValid()"
+    >
+      Ajouter
+    </ion-button>
+  </div>
+</ion-content>

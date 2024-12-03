@@ -1,0 +1,40 @@
+.todo-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin: auto;
+    max-width: 400px; 
+    padding: 20px;
+    border: 1px solid #631ebd;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  ion-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; 
+  }
+  
+  h2 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  ion-list {
+    width: 100%; 
+    margin-bottom: 20px;
+  }
+  
+  ion-input {
+    margin-bottom: 15px;
+  }
+  
+  ion-button {
+    width: 100%; 
+  }
+  

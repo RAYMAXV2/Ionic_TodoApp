@@ -1,0 +1,39 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Gérer les Catégories</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="category-container">
+    <h2>Catégories</h2>
+
+    <ion-list>
+      <ion-item *ngFor="let category of categories">
+        <ion-label>{{ category.name }}</ion-label>
+        <ion-button
+          fill="clear"
+          color="danger"
+          slot="end"
+          (click)="deleteCategory(category.id)"
+        >
+          Supprimer
+        </ion-button>
+      </ion-item>
+    </ion-list>
+
+    <div class="form-container">
+      <ion-input
+        placeholder="Nom de la catégorie"
+        [(ngModel)]="newCategoryName"
+        clearInput
+      ></ion-input>
+      <ion-button expand="block" color="primary" (click)="addCategory()">
+        Ajouter une Catégorie
+      </ion-button>
+      <ion-button expand="block" color="primary" (click)="backToList()">
+        Revenir au menu
+      </ion-button>
+    </div>
+  </div>
+</ion-content>

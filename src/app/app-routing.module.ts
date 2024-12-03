@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { MenulistComponent } from './menulist/menulist.component';
+import { CategoryManagerComponent } from './category-manager/category-manager.component';
+import { CreateTaskComponent } from './task-manager/task-manager.component';
 
 const routes: Routes = [
   {
@@ -13,6 +15,8 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {path: "menu", component: MenulistComponent},
+  { path: 'categories', component: CategoryManagerComponent },
+  { path: 'create-task', component: CreateTaskComponent },
 ];
 
 @NgModule({
