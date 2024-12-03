@@ -1,0 +1,43 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Ma To-Do List</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="todo-container">
+    <h2>Mes Tâches</h2>
+
+    <!-- Liste des tâches -->
+    <ion-list>
+      <ion-item-sliding *ngFor="let todo of todos">
+        <ion-item>
+          <ion-label>
+            <h3>{{ todo.name }}</h3>
+            <p>Créé le : {{ todo.createdAt | date: 'short' }}</p>
+          </ion-label>
+          <ion-checkbox
+            slot="end"
+            [(ngModel)]="todo.completed"
+            (ionChange)="toggleCompleted(todo)"
+          ></ion-checkbox>
+        </ion-item>
+        <ion-item-options side="end">
+          <ion-item-option color="danger" (click)="deleteTodo(todo.id)">
+            Supprimer
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+    </ion-list>
+
+    <!-- Ajouter une tâche -->
+    <ion-input
+      placeholder="Nom de la tâche"
+      [(ngModel)]="newTodoName"
+      clearInput
+    ></ion-input>
+    <ion-button expand="block" color="primary" (click)="addTodo()">
+      Ajouter
+    </ion-button>
+  </div>
+</ion-content>
