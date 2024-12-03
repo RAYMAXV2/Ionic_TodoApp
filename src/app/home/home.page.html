@@ -1,14 +1,38 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Welcome to TodoRay
+      TodoRay - Simple todolist app by RAYMAX
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <div id="container">
-    <strong>Start managing your tasks easily</strong>
-    <p><a (click)="navigateToLogin()">Go to Login</a></p>
+<ion-content [fullscreen]="true" class="homepage-content">
+  <div class="hero-section">
+    <h1>Welcome to TodoRay</h1>
+    <p>Organize your life, one task at a time.</p>
+    <ion-button expand="block" color="primary" class="start-button" (click)="navigateToLogin()">
+      Get Started
+    </ion-button>
+  </div>
+
+  <div class="features-section">
+    <h2>Why choose TodoRay?</h2>
+    <div class="features">
+      <div class="feature">
+        <ion-icon name="checkmark-circle-outline" size="large"></ion-icon>
+        <h3>Effortless Task Management</h3>
+        <p>Keep track of all your tasks easily with TodoRay.</p>
+      </div>
+      <div class="feature">
+        <ion-icon name="layers-outline" size="large"></ion-icon>
+        <h3>Organized Categories</h3>
+        <p>Sort your tasks into categories for better clarity.</p>
+      </div>
+      <div class="feature">
+        <ion-icon name="shield-checkmark-outline" size="large"></ion-icon>
+        <h3>Secure & Reliable</h3>
+        <p>Your tasks are safely stored and easily accessible.</p>
+      </div>
+    </div>
   </div>
 </ion-content>
