@@ -1,15 +1,15 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
-import { MenulistComponent } from './menulist/menulist.component';
-import { CategoryManagerComponent } from './category-manager/category-manager.component';
-import { CreateTaskComponent } from './task-manager/task-manager.component';
-import { AuthGuard } from './auth-guard.guard';
-import { LoginPage } from './login/login.component';
+import { MenulistComponent } from './pages/todolist/todolist.component'
+import { CategoryManagerComponent } from './components/category-manager/category-manager.component';
+import { CreateTaskComponent } from './components/task-manager/task-manager.component';
+import { AuthGuard } from './guards/auth-guard.guard';
+import { LoginPage } from './pages/login/login.component';
 
 const routes: Routes = [
   {
     path: 'home',
-    loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
+    loadChildren: () => import('./pages/home/home.module').then( m => m.HomePageModule)
   },
   {
     path: '',

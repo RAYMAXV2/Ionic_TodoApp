@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { MenulistComponent } from './menulist.component';
+import { MenulistComponent } from './todolist.component';
 
 describe('MenulistComponent', () => {
   let component: MenulistComponent;

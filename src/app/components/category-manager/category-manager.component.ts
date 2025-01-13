@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-import { Category } from '../modele/category';
+import { Category } from '../../models/category';
 import { Router } from '@angular/router';
 
 @Component({

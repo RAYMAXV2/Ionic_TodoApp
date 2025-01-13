@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Category } from '../modele/category';
-import { Todo } from '../modele/todo';
+import { Category } from '../../models/category';
+import { Todo } from '../../models/todo';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';

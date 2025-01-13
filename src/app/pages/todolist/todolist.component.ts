@@ -2,14 +2,14 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-import { Todo } from '../modele/todo';
-import { Category } from '../modele/category';
+import { Todo } from '../../models/todo';
+import { Category } from '../../models/category';
 import { NavigationEnd, Router } from '@angular/router';
 
 @Component({
   selector: 'app-menulist',
-  templateUrl: './menulist.component.html',
-  styleUrls: ['./menulist.component.scss'],
+  templateUrl: './todolist.component.html',
+  styleUrls: ['./todolist.component.scss'],
   imports: [IonicModule, FormsModule, CommonModule],
   standalone: true,
 })
