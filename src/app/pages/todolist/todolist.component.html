@@ -8,40 +8,39 @@
   <div class="todo-container">
     <h2>Mes Tâches</h2>
 
-    <ion-select placeholder="Filtrer par catégorie" [(ngModel)]="selectedCategory">
+    <ion-select placeholder="Filtrer par catégorie" [(ngModel)]="selectedCategoryId">
       <ion-select-option *ngFor="let category of categories" [value]="category.id">
         {{ category.name }}
       </ion-select-option>
     </ion-select>
 
-    <ion-list *ngIf="filteredTodos().length > 0; else noTodos">
-      <ion-item-sliding *ngFor="let todo of filteredTodos()">
+    <ion-list *ngIf="filteredTasks().length > 0; else noTasks">
+      <ion-item-sliding *ngFor="let task of filteredTasks()">
         <ion-item>
           <ion-label>
-            <h3>{{ todo.name }}</h3>
-            <p>Créé le : {{ todo.createdAt | date: 'short' }}</p>
+            <h3>{{ task.name }}</h3>
+            <p>Créé le : {{ task.createdAt | date: 'short' }}</p>
           </ion-label>
           <ion-checkbox
             slot="end"
-            [(ngModel)]="todo.completed"
-            (ionChange)="toggleCompleted(todo)"
+            [(ngModel)]="task.completed"
+            (ionChange)="toggleCompleted(task)"
           ></ion-checkbox>
         </ion-item>
         <ion-item-options side="end">
-          <ion-item-option color="danger" (click)="deleteTodo(todo.id)">
+          <ion-item-option color="danger" (click)="deleteTask(task.id)">
             Supprimer
           </ion-item-option>
         </ion-item-options>
       </ion-item-sliding>
     </ion-list>
 
-    <ng-template #noTodos>
+    <ng-template #noTasks>
       <p>Aucune tâche disponible pour cette catégorie.</p>
     </ng-template>
 
-
     <div class="button-container">
-      <ion-button expand="block" (click)="navigateToCreateCategory()">Catégories</ion-button>
+      <ion-button expand="block" (click)="navigateToCreateCategory()">Gérer les Catégories</ion-button>
       <ion-button expand="block" (click)="navigateToCreateTask()">Créer une Tâche</ion-button>
     </div>
   </div>

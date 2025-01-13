@@ -1,9 +1,10 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { Category } from '../../models/category';
+import { CategoryService } from '../../services/category.service'; // Service pour les catégories
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-import { Category } from '../../models/category';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-category-manager',
@@ -16,46 +17,50 @@ export class CategoryManagerComponent implements OnInit {
   categories: Category[] = [];
   newCategoryName: string = '';
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private categoryService: CategoryService) {}
 
-  ngOnInit() {
-    this.loadCategories();
+  async ngOnInit() {
+    await this.loadCategories();
   }
 
-  loadCategories() {
-    const storedCategories = localStorage.getItem('categories');
-    if (storedCategories) {
-      this.categories = JSON.parse(storedCategories);
-    }
+  /**
+   * Charge les catégories depuis le service.
+   */
+  async loadCategories() {
+    this.categories = await this.categoryService.getCategories();
   }
 
-  saveCategories() {
-    localStorage.setItem('categories', JSON.stringify(this.categories));
-  }
-
-  addCategory() {
+  /**
+   * Ajoute une nouvelle catégorie.
+   */
+  async addCategory() {
     if (this.newCategoryName.trim()) {
       const newCategory: Category = {
-        id: Date.now(), 
+        id: '', // Firestore générera un ID
         name: this.newCategoryName.trim(),
         listTasks: [],
       };
-  
-      this.categories.push(newCategory);
-  
+
+      await this.categoryService.addCategory(newCategory);
       this.newCategoryName = '';
-      this.saveCategories();
+      await this.loadCategories();
     } else {
       alert('Le nom de la catégorie ne peut pas être vide.');
     }
   }
 
-  deleteCategory(id: number) {
-    this.categories = this.categories.filter((category) => category.id !== id);
-    this.saveCategories();
+  /**
+   * Supprime une catégorie.
+   */
+  async deleteCategory(id: string) {
+    await this.categoryService.deleteCategory(id);
+    await this.loadCategories();
   }
 
-  backToList(){
+  /**
+   * Retour à la liste principale.
+   */
+  backToList() {
     this.router.navigate(['menu']);
   }
 }

@@ -1,0 +1,25 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Créer une tâche</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form (ngSubmit)="createTask()" *ngIf="categories.length > 0">
+    <ion-item>
+      <ion-label position="floating">Nom de la tâche</ion-label>
+      <ion-input [(ngModel)]="taskName" name="taskName" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Catégorie</ion-label>
+      <ion-select [(ngModel)]="selectedCategoryId" name="selectedCategoryId" required>
+        <ion-select-option *ngFor="let category of categories" [value]="category.id">
+          {{ category.name }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-button type="submit" expand="block" [disabled]="!isFormValid()">Créer la tâche</ion-button>
+  </form>
+</ion-content>

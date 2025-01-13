@@ -1,7 +1,7 @@
-import { Todo } from "./todo";
+import { Task } from "./task";
 
 export interface Category {
-    id: number;
+    id: string;
     name: string;
-    listTasks : Todo[];
+    listTasks : Task[];
   }

@@ -20,7 +20,7 @@ export class LoginPage {
 
   login() {
     if (this.authService.login(this.email, this.password)) {
-      this.router.navigate(['/menu']);
+      this.router.navigate(['/todolist']);
     } else {
       alert('Invalid credentials. Please try again.');
     }

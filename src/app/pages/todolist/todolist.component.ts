@@ -1,93 +1,104 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { Category } from '../../models/category';  // Importation du modèle Category
+import { Task } from '../../models/task';  // Importation du modèle Task
+import { TaskService } from '../../services/task.service';
+import { CategoryService } from '../../services/category.service'; // Service pour les catégories
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-import { Todo } from '../../models/todo';
-import { Category } from '../../models/category';
-import { NavigationEnd, Router } from '@angular/router';
 
 @Component({
-  selector: 'app-menulist',
+  selector: 'app-todolist',
   templateUrl: './todolist.component.html',
   styleUrls: ['./todolist.component.scss'],
   imports: [IonicModule, FormsModule, CommonModule],
   standalone: true,
 })
-export class MenulistComponent implements OnInit {
-  categories: Category[] = [];
-  selectedCategory: number | null = null;
-  newTodoName: string = '';
+export class TodolistComponent implements OnInit {
+  tasks: Task[] = [];
+  categories: Category[] = [];  
+  selectedCategoryId: string | null = null;
+  newTaskName: string = '';
 
-  constructor(private router: Router) {
-    this.router.events.subscribe((event) => {
-      if (event instanceof NavigationEnd) {
-        this.loadCategories();
-      }
-    });
-  }
+  constructor(
+    private router: Router, 
+    private taskService: TaskService, 
+    private categoryService: CategoryService  
+  ) {}
 
-  ngOnInit() {
-    this.loadCategories();
-  }
-  loadCategories() {
-    const storedCategories = localStorage.getItem('categories');
-    if (storedCategories) {
-      this.categories = JSON.parse(storedCategories);
+  async ngOnInit() {
+    this.categories = await this.categoryService.getCategories();
+    if (this.selectedCategoryId) {
+      this.tasks = await this.taskService.getTasksByCategory(this.selectedCategoryId);
     }
   }
 
-  saveCategories() {
-    localStorage.setItem('categories', JSON.stringify(this.categories));
+  /**
+   * Méthode pour filtrer les tâches en fonction de la catégorie sélectionnée.
+   */
+  filteredTasks(): Task[] {
+    if (this.selectedCategoryId) {
+      return this.tasks.filter(task => task.id === this.selectedCategoryId);
+    }
+    return this.tasks;
   }
 
-  filteredTodos() {
-  if (this.selectedCategory) {
-    const category = this.categories.find(cat => cat.id === this.selectedCategory);
-    return category?.listTasks || [];
-  }
+  /**
+   * Ajoute une nouvelle tâche.
+   */
+  async addTask() {
+    if (this.newTaskName.trim() && this.selectedCategoryId) {
+      const newTask: Task = {
+        id: '', // Firestore générera un ID
+        name: this.newTaskName.trim(),
+        completed: false,
+        createdAt: new Date(),
+      };
 
-  return this.categories
-    .map(cat => cat.listTasks)
-    .reduce((acc, tasks) => acc.concat(tasks), []);
-}
-
-  addTodo() {
-    if (this.newTodoName.trim() && this.selectedCategory) {
-      const category = this.categories.find(
-        (cat) => cat.id === this.selectedCategory
-      );
-      if (category) {
-        const newTodo: Todo = {
-          id: Date.now(),
-          name: this.newTodoName.trim(),
-          completed: false,
-          createdAt: new Date(),
-        };
-        category.listTasks.push(newTodo);
-        this.newTodoName = ''; 
-        this.saveCategories(); 
-      }
+      await this.taskService.addTask(this.selectedCategoryId, newTask);
+      this.newTaskName = '';
+      await this.loadTasks();
+    } else {
+      alert('Veuillez entrer un nom de tâche et sélectionner une catégorie.');
     }
   }
 
-  deleteTodo(todoId: number) {
-    const category = this.categories.find(
-      (cat) => cat.id === this.selectedCategory
-    );
-    if (category) {
-      category.listTasks = category.listTasks.filter((task) => task.id !== todoId);
-      this.saveCategories(); 
+  /**
+   * Supprime une tâche.
+   */
+  async deleteTask(taskId: string) {
+    if (this.selectedCategoryId) {
+      await this.taskService.deleteTask(this.selectedCategoryId, taskId);
+      await this.loadTasks();
     }
   }
 
-  toggleCompleted(todo: Todo) {
-    todo.completed = !todo.completed;
-    this.saveCategories(); 
+  /**
+   * Bascule le statut de complétion d'une tâche.
+   */
+  async toggleCompleted(task: Task) {
+    if (this.selectedCategoryId) {
+      task.completed = !task.completed;
+      await this.taskService.updateTask(this.selectedCategoryId, task);
+      await this.loadTasks();
+    }
   }
+
+  /**
+   * Charge les tâches pour la catégorie sélectionnée.
+   */
+  async loadTasks() {
+    if (this.selectedCategoryId) {
+      this.tasks = await this.taskService.getTasksByCategory(this.selectedCategoryId);
+    }
+  }
+
 
   navigateToCreateTask() {
     this.router.navigate(['/create-task']);
   }
+
 
   navigateToCreateCategory() {
     this.router.navigate(['/categories']);

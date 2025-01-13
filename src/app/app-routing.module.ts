@@ -1,25 +1,20 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
-import { MenulistComponent } from './pages/todolist/todolist.component'
+import { TodolistComponent } from './pages/todolist/todolist.component'
 import { CategoryManagerComponent } from './components/category-manager/category-manager.component';
-import { CreateTaskComponent } from './components/task-manager/task-manager.component';
 import { AuthGuard } from './guards/auth-guard.guard';
 import { LoginPage } from './pages/login/login.component';
+import { HomePage } from './pages/home/home.page';
+import { CategoryGuard } from './guards/category-guard.guard';
+import { CreateTaskComponent } from './components/create-task/create-task.component';
 
 const routes: Routes = [
-  {
-    path: 'home',
-    loadChildren: () => import('./pages/home/home.module').then( m => m.HomePageModule)
-  },
-  {
-    path: '',
-    redirectTo: 'home',
-    pathMatch: 'full'
-  },
+  { path: '', component: HomePage },
   { path: 'login', component: LoginPage },
-  {path: "menu", component: MenulistComponent, canActivate: [AuthGuard]},
+  {path: "todolist", component: TodolistComponent, canActivate: [AuthGuard]},
   { path: 'categories', component: CategoryManagerComponent, canActivate: [AuthGuard] },
-  { path: 'create-task', component: CreateTaskComponent, canActivate: [AuthGuard] },
+  { path: 'create-task', component: CreateTaskComponent, canActivate: [AuthGuard, CategoryGuard] },
+
 ];
 
 @NgModule({
