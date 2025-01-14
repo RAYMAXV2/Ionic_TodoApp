@@ -1,29 +1,36 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
+import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, User } from '@angular/fire/auth';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private readonly mockEmail = 'admin@example.com';
-  private readonly mockPassword = 'admin';
+  private currentUserSubject = new BehaviorSubject<User | null>(null);
 
-  constructor(private router: Router) {}
-
-  login(email: string, password: string): boolean {
-    if (email === this.mockEmail && password === this.mockPassword) {
-      localStorage.setItem('isLoggedIn', 'true');
-      return true;
-    }
-    return false;
+  constructor(private auth: Auth) {
+    this.auth.onAuthStateChanged((user) => {
+      this.currentUserSubject.next(user);
+    });
   }
 
-  logout(): void {
-    localStorage.removeItem('isLoggedIn');
-    this.router.navigate(['/login']);
+  get currentUser() {
+    return this.currentUserSubject.asObservable();
   }
 
-  isLoggedIn(): boolean {
-    return localStorage.getItem('isLoggedIn') === 'true';
+  async login(email: string, password: string): Promise<void> {
+    await signInWithEmailAndPassword(this.auth, email, password);
+  }
+
+  async register(email: string, password: string): Promise<void> {
+    await createUserWithEmailAndPassword(this.auth, email, password);
+  }
+
+  async logout(): Promise<void> {
+    await signOut(this.auth);
+  }
+
+  getCurrentUser(): User | null {
+    return this.auth.currentUser;
   }
 }

@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { Category } from '../../models/category';
-import { Task } from '../../models/task';
+import { IonicModule, ModalController, ToastController } from '@ionic/angular';
 import { TaskService } from '../../services/task.service';
 import { CategoryService } from '../../services/category.service';
-import { IonicModule, ModalController, ToastController } from '@ionic/angular';
-import { FormsModule } from '@angular/forms';
+import { Category } from '../../models/category';
+import { Task } from '../../models/task';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-create-task',
@@ -24,46 +23,79 @@ export class CreateTaskComponent implements OnInit {
     private modalController: ModalController,
     private taskService: TaskService,
     private categoryService: CategoryService,
-    private toastController: ToastController 
+    private toastController: ToastController
   ) {}
 
+  /**
+   * Load the categorie on init
+   */
   async ngOnInit() {
-    this.categories = await this.categoryService.getCategories();
-  }
-
-  async createTask() {
-    if (this.taskName.trim() && this.selectedCategoryId) {
-      const newTask: Task = {
-        id: '', 
-        name: this.taskName.trim(),
-        completed: false,
-        createdAt: new Date(),
-      };
-
-      await this.taskService.addTask(this.selectedCategoryId, newTask);
-
-      await this.presentToast('Task added succesfully !');
-
-      this.modalController.dismiss(); 
-    } else {
-      alert('Please fill everything');
+    try {
+      this.categories = await this.categoryService.getCategories();
+      if (this.categories.length === 0) {
+        await this.presentToast('No categories available. Please create one first.', 'danger');
+        this.modalController.dismiss();
+      }
+    } catch (error) {
+      console.error('Failed to load categories:', error);
+      await this.presentToast('Failed to load categories', 'danger');
+      this.modalController.dismiss();
     }
   }
 
-  isFormValid(): boolean {
-    return !!(this.taskName.trim() && this.selectedCategoryId);
+  /**
+   * Create a new task with a categorie linked
+   */
+  async createTask() {
+    if (!this.isFormValid()) {
+      await this.presentToast('Please fill out all fields', 'danger');
+      return;
+    }
+
+    const newTask: Task = {
+      id: '', 
+      name: this.taskName.trim(),
+      completed: false,
+      createdAt: new Date(),
+      categoryId: this.selectedCategoryId!, 
+    };
+
+    try {
+      await this.taskService.addTask(this.selectedCategoryId!, newTask);
+      await this.presentToast('Task successfully added!', 'success');
+      this.modalController.dismiss(); 
+    } catch (error) {
+      console.error('Error while adding task:', error);
+      await this.presentToast('Error while adding task', 'danger');
+    }
   }
 
+  /**
+   * Validating the form
+   * @returns true if form is correct, false otherwise
+   */
+  isFormValid(): boolean {
+    return this.taskName.trim().length > 0 && this.selectedCategoryId !== null && this.selectedCategoryId.trim().length > 0;
+  }
+
+  /**
+   * close the modal
+   */
   closeModal() {
     this.modalController.dismiss();
   }
 
-  async presentToast(message: string) {
+  /**
+   * Notification for the user
+   * @param message 
+   * @param color
+   */
+  async presentToast(message: string, color: 'success' | 'danger') {
     const toast = await this.toastController.create({
       message,
       duration: 2000,
       position: 'bottom',
-      color: 'success',
+      color,
     });
     toast.present();
   }

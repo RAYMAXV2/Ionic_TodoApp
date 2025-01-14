@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, doc, getDocs, addDoc, deleteDoc, updateDoc } from '@angular/fire/firestore';
+import { Firestore, collection, doc, getDocs, addDoc, deleteDoc, query, where } from '@angular/fire/firestore';
+import { AuthService } from './auth.service';
 import { Category } from '../models/category';
+import { v4 as uuidv4 } from 'uuid'; 
 
 @Injectable({
   providedIn: 'root',
@@ -8,50 +10,41 @@ import { Category } from '../models/category';
 export class CategoryService {
   private collectionName = 'categories';
 
-  constructor(private firestore: Firestore) {}
+  constructor(private firestore: Firestore, private authService: AuthService) {}
 
   async getCategories(): Promise<Category[]> {
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser) return [];
+
     const categories: Category[] = [];
-    const querySnapshot = await getDocs(collection(this.firestore, this.collectionName));
+    const categoriesQuery = query(
+      collection(this.firestore, this.collectionName),
+      where('userId', '==', currentUser.uid)
+    );
+    const querySnapshot = await getDocs(categoriesQuery);
 
     querySnapshot.forEach((doc) => {
-      const data = doc.data() as unknown; // Les données sont de type unknown
-
-      // Vérification explicite des propriétés requises
-      if (
-        typeof data === 'object' &&
-        data !== null &&
-        'name' in data &&
-        'listTasks' in data &&
-        Array.isArray((data as any).listTasks)
-      ) {
-        categories.push({
-          id: doc.id,
-          name: (data as any).name,
-          listTasks: (data as any).listTasks,
-        });
-      } else {
-        console.warn(`Le document ${doc.id} ne correspond pas au type Category.`);
-      }
+      categories.push({ id: doc.id, ...doc.data() } as Category);
     });
 
     return categories;
   }
 
   async addCategory(category: Category): Promise<void> {
-    try {
-      await addDoc(collection(this.firestore, this.collectionName), category);
-    } catch (error) {
-      console.error('Error adding a new categorie', error);
-      throw error;
-    }
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser) throw new Error('User not logged in');
+
+    const newCategoryId = uuidv4(); 
+
+    await addDoc(collection(this.firestore, this.collectionName), {
+      id: newCategoryId, 
+      name: category.name,
+      listTasks: category.listTasks,
+      userId: currentUser.uid,
+    });
   }
 
-  deleteCategory(categoryId: string): Promise<void> {
-    return deleteDoc(doc(this.firestore, `${this.collectionName}/${categoryId}`));
-  }
-
-  updateCategory(categoryId: string, category: Partial<Category>): Promise<void> {
-    return updateDoc(doc(this.firestore, `${this.collectionName}/${categoryId}`), category);
+  async deleteCategory(categoryId: string): Promise<void> {
+    await deleteDoc(doc(this.firestore, `${this.collectionName}/${categoryId}`));
   }
 }

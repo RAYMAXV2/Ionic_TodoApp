@@ -12,16 +12,13 @@ import { IonicModule } from '@ionic/angular';
   standalone: true,
 })
 export class HomePage {
-  public title: string = 'Bienvenue sur TodoApp';
-  public description: string = 'Gérez vos tâches et vos catégories facilement !';
 
   constructor(private router: Router) {}
 
+  /**
+   * Go to the login page
+   */
   navigateToLogin() {
     this.router.navigate(['/login']);
-  }
-
-  navigateToTodolist() {
-    this.router.navigate(['/todolist']);
   }
 }

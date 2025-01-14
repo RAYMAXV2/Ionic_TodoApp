@@ -22,6 +22,9 @@ export class CategoryManagerComponent implements OnInit {
     private modalController: ModalController
   ) {}
 
+  /**
+   * init
+   */
   async ngOnInit() {
     await this.loadCategories();
   }
@@ -32,6 +35,9 @@ export class CategoryManagerComponent implements OnInit {
     this.isLoading = false;
   }
 
+  /**
+   * Add a new categorie
+   */
   async addCategory() {
     if (this.newCategoryName.trim()) {
       const newCategory: Category = {
@@ -47,11 +53,17 @@ export class CategoryManagerComponent implements OnInit {
     }
   }
 
+  /**
+   * Delete a category by using id
+   */
   async deleteCategory(id: string) {
     await this.categoryService.deleteCategory(id);
     await this.loadCategories();
   }
 
+  /**
+   * Close modal
+   */
   closeModal() {
     this.modalController.dismiss(); 
   }

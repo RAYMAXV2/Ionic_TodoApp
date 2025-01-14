@@ -1,50 +1,43 @@
 <ion-header>
-  <ion-toolbar color="primary">
-    <ion-title>Create a task</ion-title>
+  <ion-toolbar>
+    <ion-title>Create a Task</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="closeModal()">
-        <ion-icon name="close"></ion-icon>
-      </ion-button>
+      <ion-button (click)="closeModal()">Close</ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
-  <div class="task-container">
-    <form (ngSubmit)="createTask()">
-      <ion-item>
-        <ion-label position="floating">Name of the task</ion-label>
-        <ion-input
-          [(ngModel)]="taskName"
-          name="taskName"
-          required
-          placeholder="Enter the name of the task"
-          clearInput
-        ></ion-input>
-      </ion-item>
-
-      <ion-item>
-        <ion-label position="floating">Categorie</ion-label>
-        <ion-select
-          [(ngModel)]="selectedCategoryId"
-          name="selectedCategoryId"
-          placeholder="Choose a categorie"
-          required
-        >
-          <ion-select-option *ngFor="let category of categories" [value]="category.id">
-            {{ category.name }}
-          </ion-select-option>
-        </ion-select>
-      </ion-item>
-
-      <ion-button
-        type="submit"
-        expand="block"
-        color="secondary"
-        [disabled]="!isFormValid()"
+  <form (ngSubmit)="createTask()">
+    <ion-item>
+      <ion-label position="floating">Task Name</ion-label>
+      <ion-input
+        [(ngModel)]="taskName"
+        name="taskName"
+        required
+      ></ion-input>
+    </ion-item>
+  
+    <ion-item>
+      <ion-label position="floating">Category</ion-label>
+      <ion-select
+        [(ngModel)]="selectedCategoryId"
+        name="selectedCategoryId"
+        required
       >
-        Add the new task
-      </ion-button>
-    </form>
-  </div>
+        <ion-select-option *ngFor="let category of categories" [value]="category.id">
+          {{ category.name }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+  
+    <ion-button
+      expand="block"
+      type="submit"
+      [disabled]="!isFormValid()"
+    >
+      Add Task
+    </ion-button>
+  </form>
+  
 </ion-content>

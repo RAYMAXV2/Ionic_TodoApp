@@ -1,16 +1,19 @@
 <ion-header>
   <ion-toolbar color="primary">
     <ion-title>My To-Do List</ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="light" (click)="disconnect()">Disconnect</ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
   <div class="todo-container">
-    <h1>My tasks</h1>
+    <h1>My Tasks</h1>
 
     <ion-item>
-      <ion-label position="floating">Filter by categories</ion-label>
-      <ion-select placeholder="Select a categorie" [(ngModel)]="selectedCategoryId">
+      <ion-label position="floating">Filter by Category</ion-label>
+      <ion-select placeholder="Select a category" [(ngModel)]="selectedCategoryId" (ionChange)="loadTasks()">
         <ion-select-option *ngFor="let category of categories" [value]="category.id">
           {{ category.name }}
         </ion-select-option>
@@ -22,7 +25,7 @@
         <ion-item>
           <ion-label>
             <h3>{{ task.name }}</h3>
-            <p>Créé le : {{ task.createdAt | date: 'short' }}</p>
+            <p>Created on: {{ task.createdAt | date: 'short' }}</p>
           </ion-label>
           <ion-checkbox
             slot="end"
@@ -32,22 +35,22 @@
         </ion-item>
         <ion-item-options side="end">
           <ion-item-option color="danger" (click)="deleteTask(task.id)">
-            Supprimer
+            Delete
           </ion-item-option>
         </ion-item-options>
       </ion-item-sliding>
     </ion-list>
 
     <ng-template #noTasks>
-      <p class="no-tasks-message">No tasks to show for this categorie</p>
+      <p class="no-tasks-message">No tasks available for this category.</p>
     </ng-template>
 
     <div class="button-container">
       <ion-button expand="block" color="secondary" (click)="openCategoryManager()">
-        Manage the categorie
+        Manage Categories
       </ion-button>
       <ion-button expand="block" color="tertiary" (click)="openCreateTask()">
-        Create a tasks
+        Create Task
       </ion-button>
     </div>
   </div>

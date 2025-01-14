@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { IonicModule } from '@ionic/angular';
-import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { IonicModule } from '@ionic/angular';
 
 @Component({
   selector: 'app-login',
@@ -18,11 +18,24 @@ export class LoginPage {
 
   constructor(private authService: AuthService, private router: Router) {}
 
-  login() {
-    if (this.authService.login(this.email, this.password)) {
+  /**
+   * Login in the app
+   */
+  async login() {
+    try {
+      await this.authService.login(this.email, this.password);
       this.router.navigate(['/todolist']);
-    } else {
-      alert('Invalid credentials. Please try again.');
+    } catch (error) {
+      console.error('Login failed:', error);
+      alert('Connexion problem');
     }
+  }
+
+  /**
+   * Goes to register page
+   */
+  register() {
+    this.router.navigate(['/register']);
+  
   }
 }
