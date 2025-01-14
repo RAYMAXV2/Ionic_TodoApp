@@ -5,4 +5,5 @@ export interface Task {
   createdAt: Date;
   categoryId: string; 
   userId?: string; 
+  link?: string | null;
 }

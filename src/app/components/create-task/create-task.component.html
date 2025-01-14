@@ -11,33 +11,33 @@
   <form (ngSubmit)="createTask()">
     <ion-item>
       <ion-label position="floating">Task Name</ion-label>
-      <ion-input
-        [(ngModel)]="taskName"
-        name="taskName"
-        required
-      ></ion-input>
+      <ion-input [(ngModel)]="taskName" name="taskName" required></ion-input>
     </ion-item>
   
     <ion-item>
       <ion-label position="floating">Category</ion-label>
-      <ion-select
-        [(ngModel)]="selectedCategoryId"
-        name="selectedCategoryId"
-        required
-      >
+      <ion-select [(ngModel)]="selectedCategoryId" name="selectedCategoryId" required>
         <ion-select-option *ngFor="let category of categories" [value]="category.id">
           {{ category.name }}
         </ion-select-option>
       </ion-select>
     </ion-item>
-  
-    <ion-button
-      expand="block"
-      type="submit"
-      [disabled]="!isFormValid()"
-    >
+
+    <ion-item>
+      <ion-label position="floating">Image URL</ion-label>
+      <ion-input [(ngModel)]="imageUrl" name="imageUrl" type="text"></ion-input>
+    </ion-item>
+
+    <ion-button expand="block" color="primary" (click)="pickImageMobile()" *ngIf="isMobile">
+      Take/Choose Photo
+    </ion-button>
+
+    <div style="margin-top: 1rem;" *ngIf="imageUrl">
+      <img [src]="imageUrl" style="max-width: 200px; max-height: 200px; object-fit: cover;" />
+    </div>
+
+    <ion-button expand="block" type="submit" [disabled]="!isFormValid()">
       Add Task
     </ion-button>
   </form>
-  
 </ion-content>

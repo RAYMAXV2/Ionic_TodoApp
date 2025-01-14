@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { IonicModule, ModalController, ToastController } from '@ionic/angular';
+import { IonicModule, ModalController, Platform, ToastController } from '@ionic/angular';
 import { TaskService } from '../../services/task.service';
 import { CategoryService } from '../../services/category.service';
 import { Category } from '../../models/category';
 import { Task } from '../../models/task';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+
 
 @Component({
   selector: 'app-create-task',
@@ -18,13 +20,24 @@ export class CreateTaskComponent implements OnInit {
   categories: Category[] = [];
   taskName: string = '';
   selectedCategoryId: string | null = null;
+  imageUrl: string | null = null;
+
 
   constructor(
     private modalController: ModalController,
     private taskService: TaskService,
     private categoryService: CategoryService,
-    private toastController: ToastController
+    private toastController: ToastController,
+    private platform: Platform,
   ) {}
+
+  /**
+   * Check if it's mobile or not
+   */
+  get isMobile(): boolean {
+    return this.platform.is('cordova') || this.platform.is('capacitor') || this.platform.is('hybrid');
+  }
+
 
   /**
    * Load the categorie on init
@@ -53,11 +66,12 @@ export class CreateTaskComponent implements OnInit {
     }
 
     const newTask: Task = {
-      id: '', 
+      id: '',
       name: this.taskName.trim(),
       completed: false,
       createdAt: new Date(),
-      categoryId: this.selectedCategoryId!, 
+      categoryId: this.selectedCategoryId!,
+      link: this.imageUrl
     };
 
     try {
@@ -67,6 +81,26 @@ export class CreateTaskComponent implements OnInit {
     } catch (error) {
       console.error('Error while adding task:', error);
       await this.presentToast('Error while adding task', 'danger');
+    }
+  }
+
+    /**
+   * Only if it's mobile - native to take a picture from camera or phone
+   */
+  async pickImageMobile() {
+    try {
+      const image = await Camera.getPhoto({
+        quality: 90,
+        allowEditing: false,
+        resultType: CameraResultType.DataUrl,
+        source: CameraSource.Prompt, 
+      });
+      if(image.dataUrl != null){
+        this.imageUrl = image.dataUrl;
+      }
+    } catch (error) {
+      console.error('Error', error);
+      await this.presentToast('Error picking image', 'danger');
     }
   }
 
@@ -86,7 +120,7 @@ export class CreateTaskComponent implements OnInit {
   }
 
   /**
-   * Notification for the user
+   * Notification for the user.
    * @param message 
    * @param color
    */

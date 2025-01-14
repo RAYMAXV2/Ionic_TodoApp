@@ -12,7 +12,6 @@ export class TaskService {
 
   constructor(private firestore: Firestore, private authService: AuthService) {}
 
-
   async getTasksByCategory(categoryId: string): Promise<Task[]> {
     const currentUser = this.authService.getCurrentUser();
     if (!currentUser) throw new Error('User not logged in');
@@ -42,6 +41,7 @@ export class TaskService {
           createdAt: new Date(data['createdAt']),
           categoryId: data['categoryId'], 
           userId: data['userId'], 
+          link: data['link'] || null, 
         } as Task);
       } else {
         console.warn(`Invalid task format for document ${doc.id}:`, data);
@@ -65,11 +65,11 @@ export class TaskService {
       createdAt: task.createdAt.toISOString(),
       categoryId, 
       userId: currentUser.uid, 
+      link: task.link || null, 
     });
 
     console.log(`Task added with ID: ${newTaskId}`);
   }
-
 
   async updateTask(categoryId: string, task: Task): Promise<void> {
     const currentUser = this.authService.getCurrentUser();
@@ -81,6 +81,7 @@ export class TaskService {
       completed: task.completed,
       userId: currentUser.uid,
       categoryId: task.categoryId, 
+      link: task.link || null, 
     });
 
     console.log(`Task updated: ${task.id}`);

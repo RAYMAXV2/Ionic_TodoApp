@@ -22,3 +22,16 @@ ion-header {
   --background: var(--ion-color-primary);
   --color: var(--ion-color-light);
 }
+
+.image-container {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.preview-image {
+  max-width: 100%;
+  height: auto;
+  margin-top: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}

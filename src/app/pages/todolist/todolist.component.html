@@ -23,10 +23,15 @@
     <ion-list *ngIf="filteredTasks().length > 0; else noTasks">
       <ion-item-sliding *ngFor="let task of filteredTasks()">
         <ion-item>
+          <ion-avatar slot="start" *ngIf="task.link">
+            <img [src]="task.link" />
+          </ion-avatar>
+    
           <ion-label>
             <h3>{{ task.name }}</h3>
             <p>Created on: {{ task.createdAt | date: 'short' }}</p>
           </ion-label>
+    
           <ion-checkbox
             slot="end"
             [(ngModel)]="task.completed"
@@ -40,6 +45,7 @@
         </ion-item-options>
       </ion-item-sliding>
     </ion-list>
+    
 
     <ng-template #noTasks>
       <p class="no-tasks-message">No tasks available for this category.</p>
