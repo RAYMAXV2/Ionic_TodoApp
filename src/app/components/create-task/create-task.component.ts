@@ -4,7 +4,7 @@ import { Category } from '../../models/category';
 import { Task } from '../../models/task';
 import { TaskService } from '../../services/task.service';
 import { CategoryService } from '../../services/category.service';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, ModalController, ToastController } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
@@ -21,18 +21,16 @@ export class CreateTaskComponent implements OnInit {
   selectedCategoryId: string | null = null;
 
   constructor(
-    private router: Router,
+    private modalController: ModalController,
     private taskService: TaskService,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private toastController: ToastController 
   ) {}
 
   async ngOnInit() {
     this.categories = await this.categoryService.getCategories();
   }
 
-  /**
-   * Crée une nouvelle tâche.
-   */
   async createTask() {
     if (this.taskName.trim() && this.selectedCategoryId) {
       const newTask: Task = {
@@ -43,16 +41,30 @@ export class CreateTaskComponent implements OnInit {
       };
 
       await this.taskService.addTask(this.selectedCategoryId, newTask);
-      this.router.navigate(['menu']);
+
+      await this.presentToast('Task added succesfully !');
+
+      this.modalController.dismiss(); 
     } else {
-      alert('Veuillez remplir tous les champs.');
+      alert('Please fill everything');
     }
   }
 
-  /**
-   * Vérifie si le formulaire est valide.
-   */
   isFormValid(): boolean {
     return !!(this.taskName.trim() && this.selectedCategoryId);
+  }
+
+  closeModal() {
+    this.modalController.dismiss();
+  }
+
+  async presentToast(message: string) {
+    const toast = await this.toastController.create({
+      message,
+      duration: 2000,
+      position: 'bottom',
+      color: 'success',
+    });
+    toast.present();
   }
 }

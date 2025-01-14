@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Category } from '../../models/category';  // Importation du modèle Category
-import { Task } from '../../models/task';  // Importation du modèle Task
+import { Category } from '../../models/category';  
+import { Task } from '../../models/task';  
 import { TaskService } from '../../services/task.service';
-import { CategoryService } from '../../services/category.service'; // Service pour les catégories
+import { CategoryService } from '../../services/category.service'; 
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, ModalController } from '@ionic/angular';
+import { CategoryManagerComponent } from 'src/app/components/category-manager/category-manager.component';
+import { CreateTaskComponent } from 'src/app/components/create-task/create-task.component';
 
 @Component({
   selector: 'app-todolist',
@@ -22,9 +24,9 @@ export class TodolistComponent implements OnInit {
   newTaskName: string = '';
 
   constructor(
-    private router: Router, 
     private taskService: TaskService, 
-    private categoryService: CategoryService  
+    private categoryService: CategoryService,
+    private modalController: ModalController
   ) {}
 
   async ngOnInit() {
@@ -95,12 +97,18 @@ export class TodolistComponent implements OnInit {
   }
 
 
-  navigateToCreateTask() {
-    this.router.navigate(['/create-task']);
+  async openCreateTask() {
+    const modal = await this.modalController.create({
+      component: CreateTaskComponent,
+    });
+    return await modal.present();
   }
 
 
-  navigateToCreateCategory() {
-    this.router.navigate(['/categories']);
+  async openCategoryManager() {
+    const modal = await this.modalController.create({
+      component: CategoryManagerComponent,
+    });
+    return await modal.present();
   }
 }

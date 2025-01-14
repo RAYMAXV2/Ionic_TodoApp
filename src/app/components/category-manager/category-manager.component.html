@@ -1,30 +1,46 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>Gestion des Catégories</ion-title>
+  <ion-toolbar color="primary">
+    <ion-title>Manage categorie</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
-  <form (ngSubmit)="addCategory()">
+  <ion-spinner *ngIf="isLoading" name="crescent" class="spinner-center"></ion-spinner>
+
+  <form (ngSubmit)="addCategory()" class="form-container">
     <ion-item>
-      <ion-label position="floating">Nouvelle Catégorie</ion-label>
-      <ion-input [(ngModel)]="newCategoryName" name="newCategoryName" required></ion-input>
+      <ion-label position="floating">New categorie</ion-label>
+      <ion-input
+        [(ngModel)]="newCategoryName"
+        name="newCategoryName"
+        required
+        placeholder="Enter the name"
+      ></ion-input>
     </ion-item>
-    <ion-button type="submit" expand="block">Ajouter la Catégorie</ion-button>
+    <ion-button type="submit" expand="block" color="secondary">Add a new categorie</ion-button>
   </form>
 
-  <ion-list *ngIf="categories.length > 0; else noCategories">
+  <ion-list *ngIf="!isLoading && categories.length > 0; else noCategories">
     <ion-item-sliding *ngFor="let category of categories">
       <ion-item>
-        <ion-label>{{ category.name }}</ion-label>
+        <ion-label>
+          <h2>{{ category.name }}</h2>
+        </ion-label>
       </ion-item>
       <ion-item-options side="end">
-        <ion-item-option color="danger" (click)="deleteCategory(category.id)">Supprimer</ion-item-option>
+        <ion-item-option color="danger" (click)="deleteCategory(category.id)">
+          Delete
+        </ion-item-option>
       </ion-item-options>
     </ion-item-sliding>
   </ion-list>
 
   <ng-template #noCategories>
-    <p class="ion-text-center">Aucune catégorie disponible.</p>
+    <p class="no-categories-message">No categorie yet, make your first one !</p>
   </ng-template>
 </ion-content>

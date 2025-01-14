@@ -1,23 +1,38 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>Login</ion-title>
+  <ion-toolbar color="primary">
+    <ion-title>Connection</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" class="ion-padding">
   <div class="login-container">
-    <ion-input
-      placeholder="Email"
-      type="email"
-      [(ngModel)]="email"
-      clearInput
-    ></ion-input>
-    <ion-input
-      placeholder="Password"
-      type="password"
-      [(ngModel)]="password"
-      clearInput
-    ></ion-input>
-    <ion-button expand="block" (click)="login()">Login</ion-button>
+    <h1>Welcome</h1>
+    <p>Connect to access your tasks.</p>
+
+    <ion-item>
+      <ion-label position="floating">Email</ion-label>
+      <ion-input
+        placeholder="Enter your email"
+        type="email"
+        [(ngModel)]="email"
+        clearInput
+      ></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Password</ion-label>
+      <ion-input
+        placeholder="Enter your password"
+        type="password"
+        [(ngModel)]="password"
+        clearInput
+      ></ion-input>
+    </ion-item>
+
+    <ion-button expand="block" color="secondary" (click)="login()">Connection</ion-button>
+
+    <p class="register-text">
+      No account ? Make one for free now ! <a >Register now</a>.
+    </p>
   </div>
 </ion-content>
